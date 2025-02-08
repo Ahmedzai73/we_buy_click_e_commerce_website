@@ -7,8 +7,8 @@ import { PortableText } from "next-sanity";
 
 import AddToBasketButton from "@/components/AddToBasketButton";
 
-async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+async function ProductPage({ params }: { params: { slug: string } }) {
+  const { slug } = params; // Changed from Promise to direct destructuring
   const product = await getProductBySlug(slug);
 
   if (!product) {
