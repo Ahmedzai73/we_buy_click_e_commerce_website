@@ -4,7 +4,7 @@ import { getProductsByCategory } from "@/sanity/lib/products/getProductsByCatego
 
 // Async function to handle the category page rendering
 async function CategoryPage({ params }: { params: { slug: string } }) {
-    const { slug } = params; // Directly destructuring slug from params
+    const { slug } = await params; // Directly destructuring slug from params
 
     // Fetching products based on the category slug and handling potential errors
     const products = await getProductsByCategory(slug).catch((error) => {
