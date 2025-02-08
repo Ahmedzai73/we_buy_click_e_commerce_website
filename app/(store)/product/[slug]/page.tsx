@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { imageUrl } from "@/lib/imageUrl";
 import { PortableText } from "next-sanity";
-import { Button } from "@/components/ui/button";
+
 import AddToBasketButton from "@/components/AddToBasketButton";
 
 async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -51,7 +51,7 @@ async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
             </div>
           </div>
           <div className="mt-6">
-            <AddToBasketButton product={product} disable={isOutOfStock} />
+            <AddToBasketButton product={product} disabled={isOutOfStock} />
             {/* <Button>Add to Basket</Button> */}
           </div>
         </div>
