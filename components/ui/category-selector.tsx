@@ -1,8 +1,11 @@
 "use client";
 
-import { ChevronsUpDown, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Category } from "@/sanity.types";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { Button } from "./button";
 import {
   Command,
   CommandEmpty,
@@ -10,33 +13,19 @@ import {
   CommandItem,
   CommandList,
   CommandInput,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Category } from "@/sanity.types";
-import React from "react";
+} from "./command";
+import { cn } from "@/lib/utils";
 
 interface CategorySelectorProps {
   categories: Category[];
 }
 
-export function CategorySelectorComponent({ categories }: CategorySelectorProps) {
+export default function CategorySelectorComponent({
+  categories,
+}: CategorySelectorProps) {
   const [open, setOpen] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+  const [value, setValue] = useState<string>("");
   const router = useRouter();
-
-  const handleSelectCategory = (categoryId: string, slug?: string) => {
-    setSelectedCategoryId((prev) => (prev === categoryId ? "" : categoryId));
-    if (slug) {
-      router.push(`/categories/${slug}`);
-    }
-    setOpen(false);
-  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -45,50 +34,54 @@ export function CategorySelectorComponent({ categories }: CategorySelectorProps)
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full sm:w-auto ml-6 my-4 flex items-center justify-between space-x-2 bg-red-600 border border-gray-300 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200"
+          className="w-full max-w-full relative flex justify-center sm:justify-start sm:flex-none items-center space-x-2 bg-blue-500 hover:bg-blue-700 hover:text-white text-white text-sm font-semibold rounded-lg px-4 py-2"
         >
-          <span className="text-sm sm:text-base">
-            {selectedCategoryId
-              ? categories.find((cat) => cat._id === selectedCategoryId)?.title
-              : "Select a Category"}
-          </span>
-          <ChevronsUpDown className="h-5 w-5" />
+          {value
+            ? categories.find((category) => category._id === value)?.title
+            : "Filter by category"}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full ml-6 my-1 sm:w-80 p-4 shadow-lg bg-white rounded-lg">
-        <Command shouldFilter={false}>
+      <PopoverContent className="w-full p-0">
+        <Command>
           <CommandInput
-            placeholder="Search categories..."
-            className="h-10 px-3 border border-gray-300 rounded-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500"
-            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            placeholder="Search category..."
+            className="h-9"
+            onKeyDown={(e) => {
               if (e.key === "Enter") {
-                const inputValue = (e.currentTarget as HTMLInputElement).value.toLowerCase();
-                const foundCategory = categories.find((c) =>
-                  c.title?.toLowerCase().includes(inputValue)
+                const selectedCategory = categories.find((category) =>
+                  category.title
+                    ?.toLowerCase()
+                    .includes((e.target as HTMLInputElement).value.toLowerCase())
                 );
-                if (foundCategory?.slug?.current) {
-                  setSelectedCategoryId(foundCategory._id);
-                  router.push(`/categories/${foundCategory.slug.current}`);
+                if (selectedCategory?.slug?.current) {
+                  setValue(selectedCategory._id);
+                  router.push(`/categories/${selectedCategory.slug.current}`);
                   setOpen(false);
                 }
               }
             }}
           />
           <CommandList>
-            <CommandEmpty className="text-gray-500">No categories found.</CommandEmpty>
-            <CommandGroup heading="Available Categories">
+            <CommandEmpty>No category found</CommandEmpty>
+            <CommandGroup>
               {categories.map((category) => (
                 <CommandItem
                   key={category._id}
-                  value={category.title}
-                  onSelect={() => handleSelectCategory(category._id, category.slug?.current)}
-                  className="hover:bg-red-100 rounded-lg transition-colors"
+                  value={category.title || ""}
+                  onSelect={() => {
+                    setValue(category._id || "");
+                    if (category.slug?.current) {
+                      router.push(`/categories/${category.slug.current}`);
+                    }
+                    setOpen(false);
+                  }}
                 >
-                  <span className="text-sm font-semibold">{category.title}</span>
+                  {category.title}
                   <Check
                     className={cn(
                       "ml-auto h-4 w-4",
-                      selectedCategoryId === category._id ? "opacity-100 text-red-600" : "opacity-0"
+                      value === category._id ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
