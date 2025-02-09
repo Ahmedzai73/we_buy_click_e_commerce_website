@@ -3,10 +3,15 @@ import { getAllCategories } from "@/sanity/lib/products/getAllCategories"; // Im
 import { getProductsByCategory } from "@/sanity/lib/products/getProductsByCategory"; // Importing function to fetch products by category
 
 // Async function to handle the category page rendering
-async function CategoryPage({ params }: { params: { slug: string } }) {
-    const { slug } = params; // Directly destructuring slug from params
+
+async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params; // Directly destructuring slug from params
+
+
+
 
     // Fetching products based on the category slug and handling potential errors
+
     const products = await getProductsByCategory(slug).catch((error) => {
         console.error("Error fetching products:", error);
         return []; // Return an empty array if there's an error
