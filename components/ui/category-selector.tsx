@@ -1,6 +1,6 @@
 "use client";
 
-import { Category } from "../../sanity.types";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -15,10 +15,12 @@ import {
   CommandInput,
 } from "./command";
 import { cn } from "../../lib/utils";
-
+import { Category } from "../../sanity.types";
 interface CategorySelectorProps {
   categories: Category[];
 }
+
+
 
 export default function CategorySelectorComponent({
   categories,
@@ -29,7 +31,7 @@ export default function CategorySelectorComponent({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
@@ -37,7 +39,7 @@ export default function CategorySelectorComponent({
           className="w-full max-w-full relative flex justify-center sm:justify-start sm:flex-none items-center space-x-2 bg-blue-500 hover:bg-blue-700 hover:text-white text-white text-sm font-semibold rounded-lg px-4 py-2"
         >
           {value
-            ? categories.find((category) => category._id === value)?.title
+            ? categories.find((categories) => categories._id === value)?.title
             : "Filter by category"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0" />
         </Button>
@@ -45,13 +47,14 @@ export default function CategorySelectorComponent({
       <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput
-            placeholder="Search category..."
+            placeholder="Serach category... "
             className="h-9"
-            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            onKeyDown={(e) => {
               if (e.key === "Enter") {
-                const inputValue = (e.target as HTMLInputElement).value.toLowerCase();
-                const selectedCategory = categories.find((category) =>
-                  category.title?.toLowerCase().includes(inputValue)
+                const selectedCategory = categories.find((c) =>
+                  c.title
+                    ?.toLowerCase()
+                    .includes(e.currentTarget.value.toLowerCase())
                 );
                 if (selectedCategory?.slug?.current) {
                   setValue(selectedCategory._id);
@@ -67,12 +70,10 @@ export default function CategorySelectorComponent({
               {categories.map((category) => (
                 <CommandItem
                   key={category._id}
-                  value={category.title || ""}
+                  value={category.title}
                   onSelect={() => {
-                    setValue(category._id || "");
-                    if (category.slug?.current) {
-                      router.push(`/categories/${category.slug.current}`);
-                    }
+                    setValue(category._id ? "" : category._id);
+                    router.push(`/categories/${category.slug?.current}`);
                     setOpen(false);
                   }}
                 >
