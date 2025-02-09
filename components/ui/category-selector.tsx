@@ -1,6 +1,6 @@
 "use client";
 
-import { Category } from "@/sanity.types";
+import { Category } from "../../sanity.types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
@@ -14,7 +14,7 @@ import {
   CommandList,
   CommandInput,
 } from "./command";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 interface CategorySelectorProps {
   categories: Category[];
@@ -29,7 +29,7 @@ export default function CategorySelectorComponent({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger>
         <Button
           variant="outline"
           role="combobox"
@@ -47,12 +47,11 @@ export default function CategorySelectorComponent({
           <CommandInput
             placeholder="Search category..."
             className="h-9"
-            onKeyDown={(e) => {
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
               if (e.key === "Enter") {
+                const inputValue = (e.target as HTMLInputElement).value.toLowerCase();
                 const selectedCategory = categories.find((category) =>
-                  category.title
-                    ?.toLowerCase()
-                    .includes((e.target as HTMLInputElement).value.toLowerCase())
+                  category.title?.toLowerCase().includes(inputValue)
                 );
                 if (selectedCategory?.slug?.current) {
                   setValue(selectedCategory._id);
