@@ -7,11 +7,12 @@ import Link from "next/link";
 
 function SuccessPage() {
   const searchParams = useSearchParams();
-  const orderNumber = searchParams.get("orderNumber");
+  const orderNumber = searchParams.get("orderNumber") || ""; // Ensure orderNumber is a string
   const clearBasket = useBasketStore((state) => state.clearBasket);
+  const categorySlug = searchParams.get("categorySlug") || "defaultCategory"; // Provide a default value
 
   useEffect(() => {
-    if (orderNumber) {
+    if (orderNumber && orderNumber !== "undefined") { // Check if orderNumber is not "undefined"
       clearBasket();
     }
   }, [orderNumber, clearBasket]);

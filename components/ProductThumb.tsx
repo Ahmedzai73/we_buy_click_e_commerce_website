@@ -9,14 +9,14 @@ function ProductThumb({ product }: { product: Product }) {
     return (
         <Link
             href={`/product/${product.slug?.current}`}
-            className={`group relative flex flex-col bg-white rounded-lg border border-gray-200 
-            shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden h-full
-            transform hover:-translate-y-2 ${isOutOfStock ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`group relative flex flex-col bg-white rounded-2xl border border-gray-100 
+            shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden h-full
+            transform hover:-translate-y-1 ${isOutOfStock ? "opacity-75 hover:opacity-90" : ""}`}
         >
             {/* Image Container */}
             <div className="relative aspect-square w-full overflow-hidden">
                 <Image
-                    className="object-cover p-4 transition-transform duration-500 group-hover:scale-105"
+                    className="object-contain p-4 transition-transform duration-500 group-hover:scale-110"
                     src={product.image ? urlFor(product.image).url() : "/placeholder-image.png"}
                     alt={product.name || "Product image"}
                     fill
@@ -25,7 +25,7 @@ function ProductThumb({ product }: { product: Product }) {
                 />
 
                 {isOutOfStock && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-md">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-[2px]">
                         <span className="text-white font-bold text-lg px-4 py-2 bg-red-600 rounded-lg shadow-lg">
                             Out of Stock
                         </span>
@@ -34,13 +34,13 @@ function ProductThumb({ product }: { product: Product }) {
             </div>
 
             {/* Content Container */}
-            <div className="p-4 flex flex-col flex-1">
-                <h2 className="text-lg font-semibold text-gray-900 truncate">
+            <div className="p-4 sm:p-5 flex flex-col flex-1">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">
                     {product.name}
                 </h2>
                 
                 <div className="flex-1 min-h-[4rem]">
-                    <p className="text-sm text-gray-600 line-clamp-2 mt-2">
+                    <p className="text-sm sm:text-base text-gray-600 line-clamp-2 mt-2">
                         {product.description
                             ?.map((block) =>
                                 block._type === "block"
@@ -53,11 +53,11 @@ function ProductThumb({ product }: { product: Product }) {
 
                 <div className="mt-4">
                     <div className="flex items-center space-x-3">
-                        <p className="text-xl font-bold text-red-600">
+                        <p className="text-xl sm:text-2xl font-bold text-red-600">
                             Rs.{product.price?.toFixed(0)}
                         </p>
                         {product.oldPrice && (
-                            <p className="text-base text-gray-400 line-through">
+                            <p className="text-base sm:text-lg text-gray-400 line-through">
                                 Rs.{product.oldPrice?.toFixed(0)}
                             </p>
                         )}

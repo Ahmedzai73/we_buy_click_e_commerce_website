@@ -1,15 +1,16 @@
 "use server";
 
+import { BasketItem } from "@/app/(store)/store";
+import { imageUrl } from "@/lib/imageUrl";
 import stripe from "@/lib/stripe";
-import { BasketItem } from "@/store/store";
-import { urlFor } from "@/sanity/lib/image";
 
 export type Metadata = {
   orderNumber: string;
-  customer: string;
+  customerName: string;
   customerEmail: string;
-  clerkId: string;
+  clerkUserId: string;
 };
+
 export type GroupedBasketItem = {
   product: BasketItem["product"];
   quantity: number;
@@ -24,6 +25,8 @@ export async function createCheckoutSession(
     if (itemsWithoutPrice.length > 0) {
       throw new Error("Some items do not have a price");
     }
+
+    // Search for existing customer by email.
     const customers = await stripe.customers.list({
       email: metadata.customerEmail,
       limit: 1,
@@ -60,11 +63,10 @@ export async function createCheckoutSession(
               id: item.product._id,
             },
             images: item.product.image
-              ? [urlFor(item.product.image).url()]
+              ? [imageUrl(item.product.image).url()]
               : undefined,
           },
         },
-
         quantity: item.quantity,
       })),
     });
