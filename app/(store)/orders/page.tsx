@@ -4,7 +4,7 @@ import { getMyOrders } from "@/sanity/lib/orders/getMyOrders";
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { format } from "path";
+
 async function Orders() {
 const { userId } = await auth();
 if (!userId) {
