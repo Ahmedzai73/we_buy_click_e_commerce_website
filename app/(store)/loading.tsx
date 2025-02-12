@@ -1,4 +1,4 @@
-import Lorder from "@/components/Loader";
+import Lorder from "../../components/Loader";
 function Loading() {
     return (
         <div>
