@@ -9,8 +9,8 @@ function ProductGrid({ products }: { products: Product[] }) {
         <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                 {products?.map((product) => (
-                    <AnimatePresence>
-                        <motion.div key={product._id}
+                    <AnimatePresence key={product._id}>
+                        <motion.div 
                             layout
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ 
