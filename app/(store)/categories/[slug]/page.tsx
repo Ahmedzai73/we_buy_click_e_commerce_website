@@ -2,8 +2,9 @@ import ProductsView from "@/components/ProductsView";
 import { getAllCategories } from "@/sanity/lib/products/getAllCategories";
 import { getProductsByCategory } from "@/sanity/lib/products/getProductsByCategory";
 import React from "react";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
-async function Categorypage({ params }: { params: { slug: string } }) {
+async function Categorypage({ params }: { params: Params }) {
   const { slug } = params;
   const products = await getProductsByCategory(slug).catch(() => []);
   const categories = await getAllCategories().catch(() => []);
