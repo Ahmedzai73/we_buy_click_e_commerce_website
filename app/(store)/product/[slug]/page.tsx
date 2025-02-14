@@ -12,7 +12,7 @@ interface Params {
 }
 
 // Asynchronous function to fetch and display the product page
-async function ProductPage({ params }: { params: Params }) {
+async function ProductPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   
   // Fetch the product data based on the slug
